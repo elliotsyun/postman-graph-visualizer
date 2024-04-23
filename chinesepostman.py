@@ -1,8 +1,12 @@
 """
 Eulerian Graph Generator
 
-This script generates a random Eulerian graph with a given number of vertices and attempts to find the Eulerian path or circuit within it. 
-The Chinese Postman Problem, also known as the Route Inspection or Arc Routing problem, is a famous problem in graph theory. It is named after the Chinese mathematician Mei-Ku Kwan. The problem is to find the shortest path or circuit that visits every edge of a graph. This script provides a solution by generating a random Eulerian graph and finding the Eulerian path or circuit within it.
+This script generates a random Eulerian graph with a given number of vertices
+and attempts to find the Eulerian path or circuit within it. The Chinese
+Postman Problem is a famous problem in graph theory. The problem is to find
+the shortest path or circuit that visits every edge of a graph. This script
+provides a solution by generating a random Eulerian graph and finding the
+Eulerian path or circuit within it.
 
 Author: Elliot Yun
 Date: 4/23/2024
@@ -46,7 +50,7 @@ def make_eulerian_graph(degree_sequence, seed=None):
     """
     print("Creating Eulerian graph...")
     G = nx.configuration_model(degree_sequence, seed=seed)
-    G = nx.Graph(G)  # Convert to simple graph removing parallel edges and loops
+    G = nx.Graph(G)  # Convert to simple graph
     nx.eulerize(G)  # Make graph Eulerian
 
     pos = nx.spring_layout(G)  # Node position layout for visualization
@@ -76,7 +80,10 @@ def find_eulerians(G):
         list: A list of edges forming the Eulerian circuit or path, if it exists.
     """
     if nx.is_eulerian(G):
-        print("The graph has an Eulerian Circuit, which means it has an Eulerian Path.")
+
+        print(
+            "The graph has an Eulerian Circuit, which means it has an" "Eulerian Path."
+        )
         circuit = list(nx.eulerian_circuit(G))
         print(circuit)
         return circuit
@@ -139,8 +146,9 @@ def main():
 
     num_routes = int(
         input(
-            "Welcome to the Chinese Postman Problem Solver, which is a Eulerian circuit based graph solver."
-            "\n...\nHow many houses do you want the postman to travel to?"
+            "Welcome to the Chinese Postman Problem Solver, which is a"
+            "Eulerian circuit based graph solver.\n...\n"
+            "How many houses do you want the postman to travel to?"
         )
     )
 
