@@ -1,39 +1,55 @@
+"""
+Eulerian Graph Generator
+
+This script generates a random Eulerian graph with a given number of vertices and attempts to find the Eulerian path or circuit within it. 
+The Chinese Postman Problem, also known as the Route Inspection or Arc Routing problem, is a famous problem in graph theory. It is named after the Chinese mathematician Mei-Ku Kwan. The problem is to find the shortest path or circuit that visits every edge of a graph. This script provides a solution by generating a random Eulerian graph and finding the Eulerian path or circuit within it.
+
+Author: Elliot Yun
+Date: 4/23/2024
+
+"""
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
-# This program will generate a random Eulerian graph with a given number of vertices, and tries to find
-# the Eulerian path or circuit within it.
 
-# The Chinese Postman Problem is where a postman tries to deliver mail to a town using the shortest route possible
-
-
-# generating a degree sequence full of even numbers for the random graph,
-# maximum amount of degrees at a single vertex is capped to 7
 def generate_even_sequence(vertices, seed=None):
+    """
+    Generate a sequence of even integers, representing degrees of vertices in a graph.
 
+    Parameters:
+        vertices (int): Number of vertices in the graph.
+        seed (int, optional): Seed for the random number generator.
+
+    Returns:
+        ndarray: An array containing even integers that sum to an even number.
+    """
     if seed is not None:
         np.random.seed(seed)
 
-    # generates a random degree sequence of just even numbers
     even_degree_sequence = np.random.randint(1, 4, size=vertices) * 2
-
     print("The number of routes that leads to each house is: ", even_degree_sequence)
-
     return even_degree_sequence
 
 
-# generates a random graph with a degree seequence and eulerizes it then draws it
 def make_eulerian_graph(degree_sequence, seed=None):
+    """
+    Create and display an Eulerian graph from a given degree sequence.
 
+    Parameters:
+        degree_sequence (list): Degree sequence for the graph.
+        seed (int, optional): Seed for the random number generator.
+
+    Returns:
+        tuple: A tuple containing the graph object and position dictionary.
+    """
     print("Creating Eulerian graph...")
     G = nx.configuration_model(degree_sequence, seed=seed)
-    G = nx.Graph(G)
+    G = nx.Graph(G)  # Convert to simple graph removing parallel edges and loops
+    nx.eulerize(G)  # Make graph Eulerian
 
-    nx.eulerize(G)
-
-    pos = nx.spring_layout(G)
-
+    pos = nx.spring_layout(G)  # Node position layout for visualization
     nx.draw(
         G,
         pos,
@@ -46,34 +62,47 @@ def make_eulerian_graph(degree_sequence, seed=None):
     plt.show()
 
     print("Eulerian graph created...")
-
     return G, pos
 
 
-# finds if there exists a eulerian path or circuit and returns it
 def find_eulerians(G):
+    """
+    Determine if the graph has an Eulerian circuit or path and return it.
 
+    Parameters:
+        G (Graph): A networkx graph.
+
+    Returns:
+        list: A list of edges forming the Eulerian circuit or path, if it exists.
+    """
     if nx.is_eulerian(G):
         print("The graph has an Eulerian Circuit, which means it has an Eulerian Path.")
-        print(list(nx.eulerian_circuit(G)))
-        return list(nx.eulerian_circuit(G))
+        circuit = list(nx.eulerian_circuit(G))
+        print(circuit)
+        return circuit
     elif nx.has_eulerian_path(G):
         print("There is an Eulerian Path in this graph.")
-        print(list(nx.eulerian_path(G)))
-        return list(nx.eulerian_path(G))
+        path = list(nx.eulerian_path(G))
+        print(path)
+        return path
     else:
         print("This graph is neither Eulerian nor has an Eulerian Path.")
         return None
 
 
-# draws the eulerian path or circuit given the path and the graph
-# ended here, correctly draw the eulerian path onto the regular graph
 def draw_eulerians(G, eulerian_path, pos):
+    """
+    Draw the Eulerian path or circuit on the graph.
+
+    Parameters:
+        G (Graph): The graph on which to draw.
+        eulerian_path (list): Eulerian path or circuit as a list of edges.
+        pos (dict): Node positions in the graph.
+    """
     if eulerian_path is None:
         print("There is no Eulerian circuit or path to draw.")
         return
 
-    # Draw the entire graph subtly
     nx.draw(
         G,
         pos,
@@ -83,29 +112,14 @@ def draw_eulerians(G, eulerian_path, pos):
         width=1,
         node_size=300,
     )
-
-    # Highlight the Eulerian path or circuit
     nx.draw_networkx_edges(G, pos, edgelist=eulerian_path, edge_color="red", width=2)
 
-    # Number the edges along the Eulerian path
     for i, edge in enumerate(eulerian_path):
         node1, node2 = edge
         x1, y1 = pos[node1]
         x2, y2 = pos[node2]
+        edge_label_pos = ((x1 + x2) / 2, (y1 + y2) / 2)
 
-        # Check if it is a self-loop
-        if node1 == node2:
-            # Adjust label position for self-loop
-            # Use a small radial shift for the label
-            angle = np.deg2rad(90)  # For example, 45 degrees in radians
-            radius = 0.2  # Distance away from the node center
-            dx, dy = radius * np.cos(angle), radius * np.sin(angle)
-            edge_label_pos = (x1 + dx, y1 + dy)
-        else:
-            # Calculate the position for the edge label normally for other edges
-            edge_label_pos = ((x1 + x2) / 2, (y1 + y2) / 2)
-
-        # Annotate the edge with its order in the path
         plt.text(
             edge_label_pos[0],
             edge_label_pos[1],
@@ -115,13 +129,22 @@ def draw_eulerians(G, eulerian_path, pos):
             ha="center",
             va="center",
         )
-
     plt.show()
 
 
 def main():
+    """
+    Main function to generate and display an Eulerian graph.
+    """
 
-    sequence = generate_even_sequence(6, seed=6969)
+    num_routes = int(
+        input(
+            "Welcome to the Chinese Postman Problem Solver, which is a Eulerian circuit based graph solver."
+            "\n...\nHow many houses do you want the postman to travel to?"
+        )
+    )
+
+    sequence = generate_even_sequence(num_routes, seed=6969)
     G, pos = make_eulerian_graph(sequence, seed=6969)
     euler = find_eulerians(G)
     if euler is not None:
