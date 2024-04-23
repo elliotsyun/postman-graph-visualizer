@@ -80,14 +80,11 @@ def find_eulerians(G):
         list: A list of edges forming the Eulerian circuit or path, if it exists.
     """
     if nx.is_eulerian(G):
-
-        print(
-            "The graph has an Eulerian Circuit, which means it has an" "Eulerian Path."
-        )
+        print("The graph has an Eulerian Circuit, which means it has a Eulerian Path.")
         circuit = list(nx.eulerian_circuit(G))
         print(circuit)
         return circuit
-    elif nx.has_eulerian_path(G):
+    if nx.has_eulerian_path(G):
         print("There is an Eulerian Path in this graph.")
         path = list(nx.eulerian_path(G))
         print(path)
@@ -148,7 +145,7 @@ def main():
         input(
             "Welcome to the Chinese Postman Problem Solver, which is a"
             "Eulerian circuit based graph solver.\n...\n"
-            "How many houses do you want the postman to travel to?"
+            "How many houses do you want the postman to travel to? "
         )
     )
 
