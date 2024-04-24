@@ -122,7 +122,13 @@ def draw_eulerians(G, eulerian_path, pos):
         node1, node2 = edge
         x1, y1 = pos[node1]
         x2, y2 = pos[node2]
-        edge_label_pos = ((x1 + x2) / 2, (y1 + y2) / 2)
+
+        # Check if it is a self-loop
+        if node1 == node2:
+            offset = 0.1  # Adjust the offset to fit your graph's layout
+            edge_label_pos = (x1, y1 + offset)
+        else:
+            edge_label_pos = ((x1 + x2) / 2, (y1 + y2) / 2)
 
         plt.text(
             edge_label_pos[0],
