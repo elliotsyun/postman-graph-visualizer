@@ -11,10 +11,12 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them:
 
 pip install networkx
+
 pip install matplotlib
+
 pip install numpy
 
 git clone https://github.com/yourusername/chinese-postman-project.git
 cd chinese-postman-project
 
-python chinese_postman_solver.py
+python chinese_postman.py
